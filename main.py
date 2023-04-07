@@ -3,7 +3,7 @@ from requests import request
 import influxdb_client
 from influxdb_client.client.write_api import SYNCHRONOUS
 
-devices = {
+devices = [
     {
         "name": "Server Rack",
         "ip": "192.168.1.45"
@@ -16,7 +16,7 @@ devices = {
         "name": "Dehumidifer",
         "ip": "192.168.1.47"
     },
-}
+]
 
 def log_data(write_api, bucket, org, data, name):
     write_api.write(
