@@ -3,11 +3,26 @@ from requests import request
 import influxdb_client
 from influxdb_client.client.write_api import SYNCHRONOUS
 
-def log_data(write_api, bucket, org, data):
+devices = {
+    {
+        "name": "Server Rack",
+        "ip": "192.168.1.45"
+    },
+    {
+        "name": "Furnace",
+        "ip": "192.168.1.46"
+    },
+    {
+        "name": "Dehumidifer",
+        "ip": "192.168.1.47"
+    },
+}
+
+def log_data(write_api, bucket, org, data, name):
     write_api.write(
         bucket=bucket, 
         org=org, 
-        record=influxdb_client.Point("tasmota-power-meter") \
+        record=influxdb_client.Point(name) \
             .field("Timestamp", data["Time"]) \
             .field("Power", data["ENERGY"]["Power"]) \
             .field("Voltage", data["ENERGY"]["Voltage"]) \
@@ -19,10 +34,10 @@ def log_data(write_api, bucket, org, data):
             .field("Temperature Unit", data["TempUnit"])
     )
 
-def get_data():
+def get_data(ip):
     rsp = request(
         method='GET',
-        url='http://192.168.1.45/cm?cmnd=Status%208'
+        url=f'http://{ip}/cm?cmnd=Status%208'
     )
     return rsp.json()['StatusSNS']
 
@@ -40,8 +55,12 @@ def main():
     write_api = client.write_api(write_options=SYNCHRONOUS)
 
     while True:
-        data = get_data()
-        log_data(write_api, bucket, org, data)
+        for device in devices:
+            try:
+                data = get_data(device['ip'])
+                log_data(write_api, bucket, org, data, device['name'])
+            except:
+                print(f'ERROR: Cannot connect to device or log data. {device["name"]} ({device["ip"]})')
         time.sleep(10)
 
 
