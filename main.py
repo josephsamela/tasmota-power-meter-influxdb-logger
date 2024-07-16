@@ -6,16 +6,20 @@ from influxdb_client.client.write_api import SYNCHRONOUS
 devices = [
     {
         "name": "Server Rack",
-        "ip": "192.168.1.45"
+        "ip": "192.168.1.31"
     },
     {
         "name": "Furnace",
-        "ip": "192.168.1.46"
+        "ip": "192.168.1.32"
     },
     {
         "name": "Dehumidifer",
-        "ip": "192.168.1.47"
+        "ip": "192.168.1.33"
     },
+    {
+        "name": "3D Printer",
+        "ip": "192.168.1.34"
+    }
 ]
 
 def log_data(write_api, bucket, org, data, name):
