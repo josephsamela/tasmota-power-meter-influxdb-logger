@@ -56,7 +56,7 @@ $ git clone https://github.com/josephsamela/tasmota-power-meter-influxdb-logger
 $ cd ./tasmota-power-meter-influxdb-logger
 
 # Build docker image
-$ build -t tasmota-power-meter-influxdb-logger .
+$ docker build -t tasmota-power-meter-influxdb-logger .
 
 # Run docker image with name
 $ docker run -d --restart=always --name=tasmota-power-meter-logger tasmota-power-meter-influxdb-logger
